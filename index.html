@@ -22,6 +22,13 @@
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
 <link rel="apple-touch-icon" href="favicon-192.png" />
 
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#090c14" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="PROCESS" />
+<meta name="mobile-web-app-capable" content="yes" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@600;700&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet" />
 <style>
@@ -96,6 +103,10 @@
     transition:color 0.2s ease, border-color 0.2s ease;
   }
   .nav__link:hover{ color:var(--text); border-color:var(--violet); }
+  .nav__lang{
+    border:1px solid var(--line); padding:4px 10px; font-family:'JetBrains Mono', monospace; font-size:12px;
+  }
+  .nav__lang:hover{ border-color:var(--violet); }
   @media (max-width:380px){
     .nav{ padding:14px 16px; }
     .nav__links{ gap:14px; }
@@ -341,6 +352,30 @@
     border-top:1px solid var(--line); padding:32px 28px; display:flex;
     justify-content:space-between; flex-wrap:wrap; gap:8px;
     font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono', monospace;
+  }
+
+  .footer__credits{
+    padding:0 28px 28px; font-size:11px; color:var(--text-muted);
+    font-family:'JetBrains Mono', monospace; opacity:0.7;
+  }
+  .footer__credits a{ color:var(--text-muted); text-decoration:underline; }
+  .footer__credits a:hover{ color:var(--text); }
+
+  .print-sheet{ display:none; }
+  @media print{
+    body > *:not(.print-sheet){ display:none !important; }
+    .print-sheet{
+      display:block !important; background:#ffffff; color:#111111;
+      padding:40px; font-family:'Space Grotesk', sans-serif;
+    }
+    .print-sheet__brand{ font-family:'Chakra Petch', sans-serif; font-weight:700; font-size:22px; margin-bottom:24px; }
+    .print-sheet img{ max-width:280px; display:block; margin-bottom:24px; }
+    .print-sheet h1{ font-size:26px; margin:0 0 6px; }
+    .print-sheet p{ color:#555555; margin:0 0 24px; }
+    .print-sheet table{ width:100%; border-collapse:collapse; font-family:'JetBrains Mono', monospace; font-size:13px; }
+    .print-sheet table td{ padding:10px 0; border-bottom:1px solid #dddddd; }
+    .print-sheet table td:first-child{ color:#777777; width:45%; }
+    .print-sheet__footer{ margin-top:30px; font-size:11px; color:#999999; }
   }
 
   :focus-visible{
@@ -648,23 +683,25 @@
 
   <div class="fatal-overlay" id="fatalOverlay">
     <div class="fatal-box">
-      <div class="fatal-title">PROCESS ne peut pas s'afficher</div>
+      <div class="fatal-title" data-i18n="fatal_title">PROCESS ne peut pas s'afficher</div>
       <p class="fatal-text" id="fatalText">Une erreur est survenue.</p>
-      <button class="fatal-retry" id="fatalRetry">Réessayer</button>
+      <button class="fatal-retry" id="fatalRetry" data-i18n="fatal_retry">Réessayer</button>
     </div>
   </div>
 
   <nav class="nav">
     <div class="nav__brand">PROCESS</div>
     <div class="nav__links">
-      <button class="nav__link" data-scroll="collection">Collection</button>
-      <button class="nav__link" data-scroll="selectionSummary">Sélection <span id="navSelectionCount" class="mono">(0)</span></button>
-      <button class="nav__link" data-scroll="detail">Détails</button>
+      <button class="nav__link" data-scroll="collection" data-i18n="nav_collection">Collection</button>
+      <button class="nav__link" data-scroll="selectionSummary"><span data-i18n="nav_selection">Sélection</span> <span id="navSelectionCount" class="mono">(0)</span></button>
+      <button class="nav__link" data-scroll="detail" data-i18n="nav_detail">Détails</button>
+      <button class="nav__link" data-scroll="about" data-i18n="nav_about">À propos</button>
+      <button class="nav__link nav__lang" id="langToggle" type="button">EN</button>
     </div>
   </nav>
 
   <div class="not-found-banner" id="notFoundBanner">
-    <span>Cette montre n'existe pas — voici la collection complète.</span>
+    <span data-i18n="notfound_text">Cette montre n'existe pas — voici la collection complète.</span>
     <button id="notFoundClose" aria-label="Fermer">×</button>
   </div>
 
@@ -673,27 +710,27 @@
     <div class="hero__vignette"></div>
     <div class="hero__overlay">
       <h1 class="hero__title">PROCESS</h1>
-      <p class="hero__subtitle">Six instruments, une seule méthode : rendre le mécanisme visible.</p>
+      <p class="hero__subtitle" data-i18n="hero_subtitle">Six instruments, une seule méthode : rendre le mécanisme visible.</p>
       <span class="hero__hint" id="heroHint">Glissez pour faire pivoter</span>
     </div>
   </section>
 
   <section class="manifesto">
-    <p class="manifesto__text">
+    <p class="manifesto__text" data-i18n="manifesto_text">
       PROCESS est né d'une citation, « Trust the Process », qui m'a été répétée chaque jour par quelqu'un qui me tire vers le haut&nbsp;— et qui m'a profondément marqué. S'offrir une montre PROCESS, c'est s'offrir un compagnon qui vous élève et vous accompagne tout au long du processus de vos projets.
     </p>
     <div class="manifesto__readout mono">
-      <div><span>Modèles</span><span>006</span></div>
-      <div><span>Mouvements</span><span>03</span></div>
-      <div><span>Matériaux</span><span>05</span></div>
-      <div><span>Étanchéité max.</span><span>300 m</span></div>
+      <div><span data-i18n="readout_models">Modèles</span><span>006</span></div>
+      <div><span data-i18n="readout_movements">Mouvements</span><span>03</span></div>
+      <div><span data-i18n="readout_materials">Matériaux</span><span>05</span></div>
+      <div><span data-i18n="readout_water">Étanchéité max.</span><span>300 m</span></div>
     </div>
   </section>
 
   <section class="collection" id="collection">
     <div class="collection__header">
-      <h2>La collection</h2>
-      <p>Six pièces, chacune avec sa propre fréquence lumineuse.</p>
+      <h2 data-i18n="collection_title">La collection</h2>
+      <p data-i18n="collection_subtitle">Six pièces, chacune avec sa propre fréquence lumineuse.</p>
     </div>
     <div class="collection__grid" id="collectionGrid"></div>
   </section>
@@ -706,13 +743,13 @@
     <div class="detail" id="detailSection">
       <div class="detail__canvas" id="detailCanvas"></div>
       <div class="detail__panel">
-        <div class="detail__eyebrow">Vue détaillée</div>
+        <div class="detail__eyebrow" data-i18n="detail_eyebrow">Vue détaillée</div>
         <h3 class="detail__name" id="detailName"></h3>
         <p class="detail__tagline" id="detailTagline"></p>
 
         <div class="detail__watchnav">
-          <button id="prevWatch" aria-label="Montre précédente">‹ Précédente</button>
-          <button id="nextWatch" aria-label="Montre suivante">Suivante ›</button>
+          <button id="prevWatch" aria-label="Montre précédente" data-i18n="watchnav_prev">‹ Précédente</button>
+          <button id="nextWatch" aria-label="Montre suivante" data-i18n="watchnav_next">Suivante ›</button>
         </div>
 
         <div class="detail__stepbar">
@@ -725,11 +762,11 @@
 
         <div class="detail__customize">
           <div class="detail__customize-row">
-            <span class="detail__customize-label">Lunette</span>
+            <span class="detail__customize-label" data-i18n="customize_bezel">Lunette</span>
             <div class="detail__swatches" id="bezelSwatches"></div>
           </div>
           <div class="detail__customize-row">
-            <span class="detail__customize-label">Bracelet</span>
+            <span class="detail__customize-label" data-i18n="customize_strap">Bracelet</span>
             <div class="detail__swatches" id="strapSwatches"></div>
           </div>
         </div>
@@ -740,16 +777,29 @@
         <div class="detail__actions">
           <button class="detail__cta" id="detailCta">Ajouter à la sélection</button>
           <button class="detail__share" id="detailShare" aria-label="Partager cette montre">Partager</button>
+          <button class="detail__share" id="detailPdf" aria-label="Télécharger la fiche technique en PDF">Fiche PDF</button>
         </div>
-        <p class="detail__hint">Glissez sur le modèle pour l'observer — chaque pièce s'assemble automatiquement, du boîtier au bracelet.</p>
+        <p class="detail__hint" data-i18n="detail_hint">Glissez sur le modèle pour l'observer — chaque pièce s'assemble automatiquement, du boîtier au bracelet.</p>
       </div>
     </div>
   </section>
 
   <footer class="footer">
-    <span><span class="brand-font" style="font-weight:700;">PROCESS</span> — étude de concept horloger</span>
-    <span>Pièces non commercialisées</span>
+    <span><span class="brand-font" style="font-weight:700;">PROCESS</span> — <span data-i18n="footer_tagline">étude de concept horloger</span></span>
+    <span data-i18n="footer_note">Pièces non commercialisées</span>
   </footer>
+  <div class="footer__credits">
+    <span data-i18n="credits_built_with">Construit avec</span> <a href="https://threejs.org" target="_blank" rel="noopener">Three.js</a> — <span data-i18n="credits_fonts_via">polices via</span> <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a> (Space Grotesk, JetBrains Mono, Rajdhani, Chakra Petch)
+  </div>
+
+  <div class="print-sheet" id="printSheet">
+    <div class="print-sheet__brand">PROCESS</div>
+    <img id="printImage" alt="" />
+    <h1 id="printName"></h1>
+    <p id="printTagline"></p>
+    <table id="printSpecs"></table>
+    <p class="print-sheet__footer" id="printFooter"></p>
+  </div>
 
 <script>
 (function(){
@@ -784,6 +834,234 @@
       });
   }
 
+  /* ------------------------------ i18n ------------------------------ */
+
+  var currentLang = (function(){
+    try { return localStorage.getItem("process_lang") || "fr"; } catch (e) { return "fr"; }
+  })();
+  document.documentElement.lang = currentLang;
+
+  var LANG = {
+    fr: {
+      nav_collection: "Collection",
+      nav_selection: "S\u00e9lection",
+      nav_detail: "D\u00e9tails",
+      lang_toggle_label: "Changer de langue",
+      notfound_text: "Cette montre n'existe pas \u2014 voici la collection compl\u00e8te.",
+      notfound_close: "Fermer",
+      hero_subtitle: "Six instruments, une seule m\u00e9thode\u00a0: rendre le m\u00e9canisme visible.",
+      hero_hint: "Glissez pour faire pivoter",
+      manifesto_text: "PROCESS est n\u00e9 d'une citation, \u00ab\u00a0Trust the Process\u00a0\u00bb, qui m'a \u00e9t\u00e9 r\u00e9p\u00e9t\u00e9e chaque jour par quelqu'un qui me tire vers le haut\u00a0\u2014 et qui m'a profond\u00e9ment marqu\u00e9. S'offrir une montre PROCESS, c'est s'offrir un compagnon qui vous \u00e9l\u00e8ve et vous accompagne tout au long du processus de vos projets.",
+      readout_models: "Mod\u00e8les",
+      readout_movements: "Mouvements",
+      readout_materials: "Mat\u00e9riaux",
+      readout_water: "\u00c9tanch\u00e9it\u00e9 max.",
+      collection_title: "La collection",
+      collection_subtitle: "Six pi\u00e8ces, chacune avec sa propre fr\u00e9quence lumineuse.",
+      detail_eyebrow: "Vue d\u00e9taill\u00e9e",
+      watchnav_prev: "\u2039 Pr\u00e9c\u00e9dente",
+      watchnav_next: "Suivante \u203a",
+      watchnav_prev_label: "Montre pr\u00e9c\u00e9dente",
+      watchnav_next_label: "Montre suivante",
+      step_prev_label: "Pi\u00e8ce pr\u00e9c\u00e9dente",
+      step_next_label: "Pi\u00e8ce suivante",
+      customize_bezel: "Lunette",
+      customize_strap: "Bracelet",
+      detail_hint: "Glissez sur le mod\u00e8le pour l'observer \u2014 chaque pi\u00e8ce s'assemble automatiquement, du bo\u00eetier au bracelet.",
+      footer_tagline: "\u00e9tude de concept horloger",
+      footer_note: "Pi\u00e8ces non commercialis\u00e9es",
+      credits_built_with: "Construit avec",
+      credits_fonts_via: "polices via",
+      pdf_label: "Fiche PDF",
+      pdf_aria: "T\u00e9l\u00e9charger la fiche technique en PDF",
+      print_footer: "PROCESS \u2014 fiche technique",
+      fatal_title: "PROCESS ne peut pas s'afficher",
+      fatal_retry: "R\u00e9essayer",
+      fatal_webgl: "Votre navigateur ne supporte pas l'affichage 3D (WebGL). Essayez avec une version \u00e0 jour de Safari ou Chrome.",
+      fatal_three: "Le moteur 3D n'a pas pu \u00eatre initialis\u00e9. Rechargez la page.",
+      fatal_error: "Une erreur est survenue au chargement. Rechargez la page.",
+      fatal_network: "Impossible de charger le moteur 3D. V\u00e9rifiez votre connexion internet et r\u00e9essayez.",
+      share_label: "Partager",
+      share_aria: "Partager cette montre",
+      share_copied: "Lien copi\u00e9",
+      share_prompt: "Copiez ce lien\u00a0:",
+      cta_add: "Ajouter \u00e0 la s\u00e9lection",
+      cta_remove: "Retirer de la s\u00e9lection",
+      spec_movement: "Mouvement",
+      spec_case: "Bo\u00eetier",
+      spec_diameter: "Diam\u00e8tre",
+      spec_water: "\u00c9tanch\u00e9it\u00e9",
+      spec_price: "Prix",
+      compare_title: "Comparaison",
+      compare_close: "Fermer",
+      compare_add_label: "Ajouter \u00e0 la comparaison",
+      compare_remove_label: "Retirer de la comparaison",
+      selection_title: "Votre s\u00e9lection",
+      selection_piece: "pi\u00e8ce",
+      selection_pieces: "pi\u00e8ces",
+      selection_empty: "Aucune montre sauvegard\u00e9e pour le moment. Ajoutez-en une depuis sa fiche d\u00e9taill\u00e9e.",
+      selection_total: "Total",
+      selection_remove_label: "Retirer de la s\u00e9lection",
+      saved_badge: "Sauvegard\u00e9e",
+      current_flag: "S\u00e9lection actuelle",
+      view_watch_label: "Voir la fiche de ",
+      assembled_label: "Montre assembl\u00e9e",
+      boot_line_1: "INITIALISATION DU SYST\u00c8ME",
+      boot_line_2: "ASSEMBLAGE DES COMPOSANTS",
+      boot_line_3: "CALIBRATION DES MAT\u00c9RIAUX",
+      boot_line_4: "PROCESS \u2014 PR\u00caT",
+      swatch_bezel_prefix: "Couleur de lunette",
+      swatch_strap_prefix: "Couleur de bracelet",
+      part_case_label: "Bo\u00eetier",
+      part_case_desc_suffix: ", tranche polie, dessus bross\u00e9.",
+      part_dial_label: "Cadran",
+      part_dial_desc: "Cadran soleill\u00e9, impression guilloch\u00e9e, marquage PROCESS.",
+      part_markers_label: "Index",
+      part_markers_desc: "Index appliqu\u00e9s, rev\u00eatement luminescent basse consommation.",
+      part_hands_label: "Aiguilles",
+      part_hands_desc: "Aiguilles squelett\u00e9es, embouts luminescents.",
+      part_crystal_label: "Verre",
+      part_crystal_desc: "Verre saphir bomb\u00e9, traitement anti-reflets et vernis protecteur.",
+      part_bezel_label: "Lunette",
+      part_bezel_desc: "Anneau signal\u00e9tique, \u00e9mission lumineuse haute intensit\u00e9.",
+      part_crown_label: "Couronne",
+      part_crown_desc_suffix: ", viss\u00e9e, \u00e9tanch\u00e9it\u00e9 renforc\u00e9e.",
+      part_strap_label: "Bracelet",
+      part_strap_desc_leather: "Cuir pleine fleur, surpiq\u00fbres ton sur ton.",
+      part_strap_desc_rubber: "Caoutchouc technique, finition mate."
+    },
+    en: {
+      nav_collection: "Collection",
+      nav_selection: "Selection",
+      nav_detail: "Details",
+      lang_toggle_label: "Change language",
+      notfound_text: "This watch doesn't exist \u2014 here's the full collection.",
+      notfound_close: "Close",
+      hero_subtitle: "Six instruments, one method: make the mechanism visible.",
+      hero_hint: "Drag to rotate",
+      manifesto_text: "PROCESS was born from a quote, \u201cTrust the Process,\u201d repeated to me every day by someone who pushes me forward\u00a0\u2014 and it left a lasting mark on me. Getting a PROCESS watch means getting a companion that lifts you up and stays with you throughout the process of your projects.",
+      readout_models: "Models",
+      readout_movements: "Movements",
+      readout_materials: "Materials",
+      readout_water: "Max. water resistance",
+      collection_title: "The collection",
+      collection_subtitle: "Six pieces, each with its own light frequency.",
+      detail_eyebrow: "Detailed view",
+      watchnav_prev: "\u2039 Previous",
+      watchnav_next: "Next \u203a",
+      watchnav_prev_label: "Previous watch",
+      watchnav_next_label: "Next watch",
+      step_prev_label: "Previous piece",
+      step_next_label: "Next piece",
+      customize_bezel: "Bezel",
+      customize_strap: "Strap",
+      detail_hint: "Drag the model to look around it \u2014 each piece assembles automatically, from case to strap.",
+      footer_tagline: "horological concept study",
+      footer_note: "Concept pieces, not for sale",
+      credits_built_with: "Built with",
+      credits_fonts_via: "fonts via",
+      pdf_label: "PDF sheet",
+      pdf_aria: "Download the technical sheet as PDF",
+      print_footer: "PROCESS \u2014 technical sheet",
+      fatal_title: "PROCESS can't be displayed",
+      fatal_retry: "Try again",
+      fatal_webgl: "Your browser doesn't support 3D rendering (WebGL). Try an up-to-date version of Safari or Chrome.",
+      fatal_three: "The 3D engine could not be initialized. Reload the page.",
+      fatal_error: "Something went wrong while loading. Reload the page.",
+      fatal_network: "Could not load the 3D engine. Check your internet connection and try again.",
+      share_label: "Share",
+      share_aria: "Share this watch",
+      share_copied: "Link copied",
+      share_prompt: "Copy this link:",
+      cta_add: "Add to selection",
+      cta_remove: "Remove from selection",
+      spec_movement: "Movement",
+      spec_case: "Case",
+      spec_diameter: "Diameter",
+      spec_water: "Water resistance",
+      spec_price: "Price",
+      compare_title: "Comparison",
+      compare_close: "Close",
+      compare_add_label: "Add to comparison",
+      compare_remove_label: "Remove from comparison",
+      selection_title: "Your selection",
+      selection_piece: "piece",
+      selection_pieces: "pieces",
+      selection_empty: "No watch saved yet. Add one from its detail page.",
+      selection_total: "Total",
+      selection_remove_label: "Remove from selection",
+      saved_badge: "Saved",
+      current_flag: "Currently viewing",
+      view_watch_label: "View ",
+      assembled_label: "Fully assembled",
+      boot_line_1: "SYSTEM INITIALIZATION",
+      boot_line_2: "ASSEMBLING COMPONENTS",
+      boot_line_3: "CALIBRATING MATERIALS",
+      boot_line_4: "PROCESS \u2014 READY",
+      swatch_bezel_prefix: "Bezel color",
+      swatch_strap_prefix: "Strap color",
+      part_case_label: "Case",
+      part_case_desc_suffix: ", polished sides, brushed top.",
+      part_dial_label: "Dial",
+      part_dial_desc: "Sunburst dial, guilloch\u00e9 print, PROCESS marking.",
+      part_markers_label: "Markers",
+      part_markers_desc: "Applied markers, low-power luminescent coating.",
+      part_hands_label: "Hands",
+      part_hands_desc: "Skeleton hands, luminescent tips.",
+      part_crystal_label: "Crystal",
+      part_crystal_desc: "Domed sapphire crystal, anti-reflective treatment and protective coating.",
+      part_bezel_label: "Bezel",
+      part_bezel_desc: "Signature ring, high-intensity light emission.",
+      part_crown_label: "Crown",
+      part_crown_desc_suffix: ", screw-down, reinforced water resistance.",
+      part_strap_label: "Strap",
+      part_strap_desc_leather: "Full-grain leather, tone-on-tone stitching.",
+      part_strap_desc_rubber: "Technical rubber, matte finish."
+    }
+  };
+
+  function t(key){
+    return (LANG[currentLang] && LANG[currentLang][key] !== undefined) ? LANG[currentLang][key] : (LANG.fr[key] || key);
+  }
+
+  function tw(watch){
+    if (currentLang === "en" && watch.en) {
+      return {
+        tagline: watch.en.tagline || watch.tagline,
+        movement: watch.en.movement || watch.movement,
+        material: watch.en.material || watch.material
+      };
+    }
+    return { tagline: watch.tagline, movement: watch.movement, material: watch.material };
+  }
+
+  function colorName(c){
+    return (currentLang === "en" && c.nameEn) ? c.nameEn : c.name;
+  }
+
+  function applyStaticTranslations(){
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    var notFoundClose = document.getElementById("notFoundClose");
+    if (notFoundClose) notFoundClose.setAttribute("aria-label", t("notfound_close"));
+    var prevWatchBtn = document.getElementById("prevWatch");
+    if (prevWatchBtn) prevWatchBtn.setAttribute("aria-label", t("watchnav_prev_label"));
+    var nextWatchBtn = document.getElementById("nextWatch");
+    if (nextWatchBtn) nextWatchBtn.setAttribute("aria-label", t("watchnav_next_label"));
+    var detailPrevBtn = document.getElementById("detailPrev");
+    if (detailPrevBtn) detailPrevBtn.setAttribute("aria-label", t("step_prev_label"));
+    var detailNextBtn = document.getElementById("detailNext");
+    if (detailNextBtn) detailNextBtn.setAttribute("aria-label", t("step_next_label"));
+    var shareBtnEl = document.getElementById("detailShare");
+    if (shareBtnEl) shareBtnEl.setAttribute("aria-label", t("share_aria"));
+    var langBtn = document.getElementById("langToggle");
+    if (langBtn) {
+      langBtn.setAttribute("aria-label", t("lang_toggle_label"));
+      langBtn.textContent = currentLang === "fr" ? "EN" : "FR";
+    }
+  }
+
   /* ----------------------------- Data ----------------------------- */
 
   var WATCHES = [
@@ -791,56 +1069,62 @@
       id: "zero", name: "PROCESS ZERO", tagline: "Le point de départ",
       movement: "Automatique", material: "Titane grade 5", diameter: "40 mm",
       water: "100 m", price: "890 €",
-      caseColor: 0x4a4e5c, dial: 0x0c0e14, accent: 0x7b2fff
+      caseColor: 0x4a4e5c, dial: 0x0c0e14, accent: 0x7b2fff,
+      en: { tagline: "The starting point", movement: "Automatic", material: "Grade 5 titanium" }
     },
     {
       id: "pulse", name: "PROCESS PULSE", tagline: "Rythme urbain",
       movement: "Quartz haute précision", material: "Acier inoxydable", diameter: "41 mm",
       water: "100 m", price: "520 €",
-      caseColor: 0x565a63, dial: 0x101114, accent: 0xff7a29
+      caseColor: 0x565a63, dial: 0x101114, accent: 0xff7a29,
+      en: { tagline: "Urban rhythm", movement: "High-precision quartz", material: "Stainless steel" }
     },
     {
       id: "echo", name: "PROCESS ECHO", tagline: "Écho mécanique",
       movement: "Mécanique squelette", material: "Céramique noire", diameter: "42 mm",
       water: "50 m", price: "1 450 €",
-      caseColor: 0x1c1f26, dial: 0x05070a, accent: 0x22d3ee
+      caseColor: 0x1c1f26, dial: 0x05070a, accent: 0x22d3ee,
+      en: { tagline: "Mechanical echo", movement: "Skeleton mechanical", material: "Black ceramic" }
     },
     {
       id: "drift", name: "PROCESS DRIFT", tagline: "Dérive nocturne",
       movement: "Automatique", material: "Bronze", diameter: "42 mm",
       water: "200 m", price: "980 €",
-      caseColor: 0x7a5a3e, dial: 0x120a08, accent: 0xff3d81, strapColor: 0x3b2415
+      caseColor: 0x7a5a3e, dial: 0x120a08, accent: 0xff3d81, strapColor: 0x3b2415,
+      en: { tagline: "Night drift", movement: "Automatic", material: "Bronze" }
     },
     {
       id: "halo", name: "PROCESS HALO", tagline: "Cercle de lumière",
       movement: "Quartz", material: "Titane poli", diameter: "38 mm",
       water: "100 m", price: "610 €",
-      caseColor: 0x8a8f9c, dial: 0x0e1013, accent: 0x2dd4bf
+      caseColor: 0x8a8f9c, dial: 0x0e1013, accent: 0x2dd4bf,
+      en: { tagline: "Circle of light", movement: "Quartz", material: "Polished titanium" }
     },
     {
       id: "void", name: "PROCESS VOID", tagline: "Absence totale",
       movement: "Mécanique squelette", material: "Carbone forgé", diameter: "43 mm",
       water: "300 m", price: "1 890 €",
-      caseColor: 0x101114, dial: 0x000000, accent: 0x4f46e5
+      caseColor: 0x101114, dial: 0x000000, accent: 0x4f46e5,
+      en: { tagline: "Total absence", movement: "Skeleton mechanical", material: "Forged carbon" }
     }
   ];
 
   var HERO_WATCH = WATCHES[5]; // PROCESS VOID as flagship piece
 
   var BEZEL_COLORS = [
-    { name: "Violet", hex: 0x7b2fff },
-    { name: "Ambre", hex: 0xff7a29 },
-    { name: "Cyan", hex: 0x22d3ee },
-    { name: "Rose", hex: 0xff3d81 },
-    { name: "Turquoise", hex: 0x2dd4bf },
-    { name: "Indigo", hex: 0x4f46e5 }
+    { name: "Violet", nameEn: "Purple", hex: 0x7b2fff },
+    { name: "Ambre", nameEn: "Amber", hex: 0xff7a29 },
+    { name: "Cyan", nameEn: "Cyan", hex: 0x22d3ee },
+    { name: "Rose", nameEn: "Pink", hex: 0xff3d81 },
+    { name: "Turquoise", nameEn: "Turquoise", hex: 0x2dd4bf },
+    { name: "Indigo", nameEn: "Indigo", hex: 0x4f46e5 }
   ];
 
   var STRAP_COLORS = [
-    { name: "Noir", hex: 0x14161c },
-    { name: "Graphite", hex: 0x3a3d46 },
-    { name: "Cuir brun", hex: 0x3b2415 },
-    { name: "Cuir camel", hex: 0x8a5a34 }
+    { name: "Noir", nameEn: "Black", hex: 0x14161c },
+    { name: "Graphite", nameEn: "Graphite", hex: 0x3a3d46 },
+    { name: "Cuir brun", nameEn: "Brown leather", hex: 0x3b2415 },
+    { name: "Cuir camel", nameEn: "Camel leather", hex: 0x8a5a34 }
   ];
 
   /* -------------------------- Three helpers ------------------------- */
@@ -1203,14 +1487,14 @@
   }
 
   var PART_DEFS = [
-    { key: "case", label: "Boîtier", desc: function(w){ return w.material + ", tranche polie, dessus brossé."; } },
-    { key: "dial", label: "Cadran", desc: function(){ return "Cadran soleillé, impression guillochée, marquage PROCESS."; } },
-    { key: "markers", label: "Index", desc: function(){ return "Index appliqués, revêtement luminescent basse consommation."; } },
-    { key: "hands", label: "Aiguilles", desc: function(){ return "Aiguilles squelettées, embouts luminescents."; } },
-    { key: "crystal", label: "Verre", desc: function(){ return "Verre saphir bombé, traitement anti-reflets et vernis protecteur."; } },
-    { key: "bezel", label: "Lunette", desc: function(){ return "Anneau signalétique, émission lumineuse haute intensité."; } },
-    { key: "crown", label: "Couronne", desc: function(w){ return w.material + ", vissée, étanchéité renforcée."; } },
-    { key: "strap", label: "Bracelet", desc: function(w){ return w.strapColor ? "Cuir pleine fleur, surpiqûres ton sur ton." : "Caoutchouc technique, finition mate."; } }
+    { key: "case", label: function(){ return t("part_case_label"); }, desc: function(w){ return tw(w).material + t("part_case_desc_suffix"); } },
+    { key: "dial", label: function(){ return t("part_dial_label"); }, desc: function(){ return t("part_dial_desc"); } },
+    { key: "markers", label: function(){ return t("part_markers_label"); }, desc: function(){ return t("part_markers_desc"); } },
+    { key: "hands", label: function(){ return t("part_hands_label"); }, desc: function(){ return t("part_hands_desc"); } },
+    { key: "crystal", label: function(){ return t("part_crystal_label"); }, desc: function(){ return t("part_crystal_desc"); } },
+    { key: "bezel", label: function(){ return t("part_bezel_label"); }, desc: function(){ return t("part_bezel_desc"); } },
+    { key: "crown", label: function(){ return t("part_crown_label"); }, desc: function(w){ return tw(w).material + t("part_crown_desc_suffix"); } },
+    { key: "strap", label: function(){ return t("part_strap_label"); }, desc: function(w){ return w.strapColor ? t("part_strap_desc_leather") : t("part_strap_desc_rubber"); } }
   ];
 
   /* ------------------------- Scene builders ------------------------- */
@@ -1572,8 +1856,8 @@
 
     if (watches.length === 0) {
       section.innerHTML =
-        '<div class="selection__header"><h2>Votre sélection</h2></div>' +
-        '<p class="selection__empty">Aucune montre sauvegardée pour le moment. Ajoutez-en une depuis sa fiche détaillée.</p>';
+        '<div class="selection__header"><h2>' + t("selection_title") + '</h2></div>' +
+        '<p class="selection__empty">' + t("selection_empty") + '</p>';
       return;
     }
 
@@ -1582,23 +1866,23 @@
     }, 0);
 
     section.innerHTML =
-      '<div class="selection__header"><h2>Votre sélection</h2>' +
-        '<span class="selection__count mono">' + watches.length + (watches.length > 1 ? " pièces" : " pièce") + '</span>' +
+      '<div class="selection__header"><h2>' + t("selection_title") + '</h2>' +
+        '<span class="selection__count mono">' + watches.length + " " + (watches.length > 1 ? t("selection_pieces") : t("selection_piece")) + '</span>' +
       '</div>' +
       '<div class="selection__list">' +
         watches.map(function(w){
-          return '<div class="selection__row" data-id="' + w.id + '" tabindex="0" role="button" aria-label="Voir la fiche de ' + w.name + '">' +
+          return '<div class="selection__row" data-id="' + w.id + '" tabindex="0" role="button" aria-label="' + t("view_watch_label") + w.name + '">' +
             '<img src="' + (cardImageCache[w.id] || "") + '" alt="' + w.name + '" />' +
             '<div class="selection__info">' +
               '<div class="selection__name" style="color:' + hexToCss(w.accent) + '">' + w.name + '</div>' +
-              '<div class="selection__tagline">' + w.tagline + '</div>' +
+              '<div class="selection__tagline">' + tw(w).tagline + '</div>' +
             '</div>' +
             '<div class="selection__price mono">' + w.price + '</div>' +
-            '<button class="selection__remove" aria-label="Retirer de la sélection">×</button>' +
+            '<button class="selection__remove" aria-label="' + t("selection_remove_label") + '">×</button>' +
           '</div>';
         }).join("") +
       '</div>' +
-      '<div class="selection__total"><span>Total</span><span class="mono">' + formatPriceFR(total) + '</span></div>';
+      '<div class="selection__total"><span>' + t("selection_total") + '</span><span class="mono">' + formatPriceFR(total) + '</span></div>';
 
     section.querySelectorAll(".selection__row").forEach(function(row){
       row.addEventListener("click", function(e){
@@ -1652,7 +1936,7 @@
       var active = card && compareIds.indexOf(card.dataset.id) !== -1;
       btn.classList.toggle("watch-card__compare--active", active);
       btn.textContent = active ? "✓" : "+";
-      btn.setAttribute("aria-label", active ? "Retirer de la comparaison" : "Ajouter à la comparaison");
+      btn.setAttribute("aria-label", active ? t("compare_remove_label") : t("compare_add_label"));
     });
   }
 
@@ -1674,25 +1958,25 @@
 
     section.innerHTML =
       '<div class="compare__header">' +
-        "<h2>Comparaison</h2>" +
-        '<button class="compare__close" id="compareClose">Fermer</button>' +
+        "<h2>" + t("compare_title") + "</h2>" +
+        '<button class="compare__close" id="compareClose">' + t("compare_close") + '</button>' +
       "</div>" +
       '<div class="compare__grid">' +
-        '<div class="compare__col" data-id="' + a.id + '" tabindex="0" role="button" aria-label="Voir la fiche de ' + a.name + '">' +
+        '<div class="compare__col" data-id="' + a.id + '" tabindex="0" role="button" aria-label="' + t("view_watch_label") + a.name + '">' +
           '<img src="' + (cardImageCache[a.id] || "") + '" alt="' + a.name + '" />' +
           '<div class="compare__name" style="color:' + hexToCss(a.accent) + '">' + a.name + "</div>" +
         "</div>" +
-        '<div class="compare__col" data-id="' + b.id + '" tabindex="0" role="button" aria-label="Voir la fiche de ' + b.name + '">' +
+        '<div class="compare__col" data-id="' + b.id + '" tabindex="0" role="button" aria-label="' + t("view_watch_label") + b.name + '">' +
           '<img src="' + (cardImageCache[b.id] || "") + '" alt="' + b.name + '" />' +
           '<div class="compare__name" style="color:' + hexToCss(b.accent) + '">' + b.name + "</div>" +
         "</div>" +
       "</div>" +
       '<table class="compare__table"><tbody>' +
-        row("Mouvement", a.movement, b.movement) +
-        row("Boîtier", a.material, b.material) +
-        row("Diamètre", a.diameter, b.diameter) +
-        row("Étanchéité", a.water, b.water) +
-        row("Prix", a.price, b.price) +
+        row(t("spec_movement"), tw(a).movement, tw(b).movement) +
+        row(t("spec_case"), tw(a).material, tw(b).material) +
+        row(t("spec_diameter"), a.diameter, b.diameter) +
+        row(t("spec_water"), a.water, b.water) +
+        row(t("spec_price"), a.price, b.price) +
       "</tbody></table>";
 
     section.style.display = "block";
@@ -1719,11 +2003,27 @@
     });
   }
 
+  function printSpecSheet(watch){
+    var img = document.getElementById("printImage");
+    img.src = cardImageCache[watch.id] || "";
+    img.alt = watch.name;
+    document.getElementById("printName").textContent = watch.name;
+    document.getElementById("printTagline").textContent = tw(watch).tagline;
+    document.getElementById("printSpecs").innerHTML =
+      "<tr><td>" + t("spec_movement") + "</td><td>" + tw(watch).movement + "</td></tr>" +
+      "<tr><td>" + t("spec_case") + "</td><td>" + tw(watch).material + "</td></tr>" +
+      "<tr><td>" + t("spec_diameter") + "</td><td>" + watch.diameter + "</td></tr>" +
+      "<tr><td>" + t("spec_water") + "</td><td>" + watch.water + "</td></tr>" +
+      "<tr><td>" + t("spec_price") + "</td><td>" + watch.price + "</td></tr>";
+    document.getElementById("printFooter").textContent = t("print_footer");
+    window.print();
+  }
+
   function shareWatch(watch, btn){
     var url = window.location.origin + window.location.pathname + "#" + watch.id;
     var shareData = {
       title: "PROCESS — " + watch.name,
-      text: watch.tagline + " — " + watch.price,
+      text: tw(watch).tagline + " — " + watch.price,
       url: url
     };
 
@@ -1741,26 +2041,26 @@
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url)
-        .then(function(){ confirm("Lien copié"); })
-        .catch(function(){ window.prompt("Copiez ce lien :", url); });
+        .then(function(){ confirm(t("share_copied")); })
+        .catch(function(){ window.prompt(t("share_prompt"), url); });
     } else {
-      window.prompt("Copiez ce lien :", url);
+      window.prompt(t("share_prompt"), url);
     }
   }
 
   function renderDetail(watch){
     document.getElementById("detailName").textContent = watch.name;
-    document.getElementById("detailTagline").textContent = watch.tagline;
+    document.getElementById("detailTagline").textContent = tw(watch).tagline;
     document.getElementById("detailSpecs").innerHTML =
-      "<tr><td>Mouvement</td><td>" + watch.movement + "</td></tr>" +
-      "<tr><td>Diamètre</td><td>" + watch.diameter + "</td></tr>" +
-      "<tr><td>Étanchéité</td><td>" + watch.water + "</td></tr>" +
-      "<tr><td>Prix</td><td>" + watch.price + "</td></tr>";
+      "<tr><td>" + t("spec_movement") + "</td><td>" + tw(watch).movement + "</td></tr>" +
+      "<tr><td>" + t("spec_diameter") + "</td><td>" + watch.diameter + "</td></tr>" +
+      "<tr><td>" + t("spec_water") + "</td><td>" + watch.water + "</td></tr>" +
+      "<tr><td>" + t("spec_price") + "</td><td>" + watch.price + "</td></tr>";
 
     var cta = document.getElementById("detailCta");
     var saved = isInSelection(watch.id);
     function refreshCta(){
-      cta.textContent = saved ? "Retirer de la sélection" : "Ajouter à la sélection";
+      cta.textContent = saved ? t("cta_remove") : t("cta_add");
       cta.classList.toggle("detail__cta--active", saved);
     }
     refreshCta();
@@ -1775,8 +2075,13 @@
 
     var shareBtn = document.getElementById("detailShare");
     shareBtn.disabled = false;
-    shareBtn.textContent = "Partager";
+    shareBtn.textContent = t("share_label");
     shareBtn.onclick = function(){ shareWatch(watch, shareBtn); };
+
+    var pdfBtn = document.getElementById("detailPdf");
+    pdfBtn.textContent = t("pdf_label");
+    pdfBtn.setAttribute("aria-label", t("pdf_aria"));
+    pdfBtn.onclick = function(){ printSpecSheet(watch); };
 
     document.getElementById("detailSection").style.setProperty("--accent", hexToCss(watch.accent));
 
@@ -1784,7 +2089,7 @@
     if (detailStepTimer) { clearTimeout(detailStepTimer); detailStepTimer = null; }
 
     var combined = PART_DEFS.map(function(def){
-      return { key: def.key, label: def.label, desc: def.desc(watch), object: null, state: { current: 0, target: 0 } };
+      return { key: def.key, label: def.label(), desc: def.desc(watch), object: null, state: { current: 0, target: 0 } };
     });
 
     function onFrame(){
@@ -1850,7 +2155,7 @@
     function buildSwatches(containerId, palette, currentHex, onPick, labelPrefix){
       var wrap = document.getElementById(containerId);
       wrap.innerHTML = palette.map(function(c){
-        return '<button type="button" class="detail__swatch" data-hex="' + c.hex + '" style="--swatch:' + hexToCss(c.hex) + '" aria-label="' + labelPrefix + ' : ' + c.name + '" aria-pressed="false"></button>';
+        return '<button type="button" class="detail__swatch" data-hex="' + c.hex + '" style="--swatch:' + hexToCss(c.hex) + '" aria-label="' + labelPrefix + ' : ' + colorName(c) + '" aria-pressed="false"></button>';
       }).join("");
       var buttons = wrap.querySelectorAll(".detail__swatch");
       function markActive(hex){
@@ -1869,8 +2174,8 @@
         });
       });
     }
-    buildSwatches("bezelSwatches", BEZEL_COLORS, watch.accent, setBezelColor, "Couleur de lunette");
-    buildSwatches("strapSwatches", STRAP_COLORS, watch.strapColor || 0x14161c, setStrapColor, "Couleur de bracelet");
+    buildSwatches("bezelSwatches", BEZEL_COLORS, watch.accent, setBezelColor, t("swatch_bezel_prefix"));
+    buildSwatches("strapSwatches", STRAP_COLORS, watch.strapColor || 0x14161c, setStrapColor, t("swatch_strap_prefix"));
 
     var step = 0;
     var prevBtn = document.getElementById("detailPrev");
@@ -1885,7 +2190,7 @@
       rows.forEach(function(row, idx){
         row.classList.toggle("detail__part--active", s < combined.length && idx === s);
       });
-      if (s === combined.length) indicator.textContent = "Montre assemblée";
+      if (s === combined.length) indicator.textContent = t("assembled_label");
       else indicator.textContent = (s + 1) + " / " + combined.length + " — " + combined[s].label;
       prevBtn.disabled = s === 0;
       nextBtn.disabled = s === combined.length;
@@ -1920,7 +2225,7 @@
         if (!existing) {
           var el = document.createElement("div");
           el.className = "watch-card__saved";
-          el.textContent = "Sauvegardée";
+          el.textContent = t("saved_badge");
           card.appendChild(el);
         }
       } else if (existing) {
@@ -1945,7 +2250,7 @@
       if (isActive) {
         var f = document.createElement("div");
         f.className = "watch-card__flag";
-        f.textContent = "Sélection actuelle";
+        f.textContent = t("current_flag");
         card.appendChild(f);
       }
     });
@@ -1976,18 +2281,18 @@
       card.className = "watch-card";
       card.tabIndex = 0;
       card.setAttribute("role", "button");
-      card.setAttribute("aria-label", "Voir la fiche de " + watch.name);
+      card.setAttribute("aria-label", t("view_watch_label") + watch.name);
       card.dataset.id = watch.id;
       card.style.setProperty("--accent", hexToCss(watch.accent));
       card.innerHTML =
         '<span class="watch-card__corner watch-card__corner--tl"></span>' +
         '<span class="watch-card__corner watch-card__corner--br"></span>' +
-        '<button type="button" class="watch-card__compare" aria-label="Ajouter à la comparaison">+</button>' +
+        '<button type="button" class="watch-card__compare" aria-label="' + t("compare_add_label") + '">+</button>' +
         '<div class="watch-card__canvas"><div class="watch-card__placeholder"></div></div>' +
         '<div class="watch-card__info">' +
           '<div class="watch-card__name">' + watch.name + '</div>' +
-          '<div class="watch-card__tagline">' + watch.tagline + '</div>' +
-          '<div class="watch-card__meta"><span>' + watch.movement + '</span><span>' + watch.diameter + '</span></div>' +
+          '<div class="watch-card__tagline">' + tw(watch).tagline + '</div>' +
+          '<div class="watch-card__meta"><span>' + tw(watch).movement + '</span><span>' + watch.diameter + '</span></div>' +
           '<div class="watch-card__price">' + watch.price + '</div>' +
         '</div>';
 
@@ -2027,7 +2332,7 @@
     initInteractiveScene(container, HERO_WATCH, {
       interactive: true, showGrid: true, showParticles: true, cameraZ: 3.6, pixelRatioCap: 1.5
     });
-    document.getElementById("heroHint").textContent = "Glissez pour faire pivoter — " + HERO_WATCH.name;
+    document.getElementById("heroHint").textContent = t("hero_hint") + " — " + HERO_WATCH.name;
   }
 
   function initNav(){
@@ -2137,14 +2442,12 @@
 
   /* ------------------------- Boot sequence ------------------------- */
 
-  var BOOT_LINES = [
-    "INITIALISATION DU SYSTÈME",
-    "ASSEMBLAGE DES COMPOSANTS",
-    "CALIBRATION DES MATÉRIAUX",
-    "PROCESS — PRÊT"
-  ];
+  function getBootLines(){
+    return [t("boot_line_1"), t("boot_line_2"), t("boot_line_3"), t("boot_line_4")];
+  }
 
   function runBootSequence(){
+    var BOOT_LINES = getBootLines();
     var overlay = document.getElementById("bootOverlay");
     var linesContainer = document.getElementById("bootLines");
     var canvasEl = document.getElementById("bootCanvas");
@@ -2227,7 +2530,31 @@
 
   /* ------------------------------ Init ------------------------------ */
 
+  function setLanguage(lang){
+    currentLang = lang;
+    try { localStorage.setItem("process_lang", lang); } catch (e) {}
+    document.documentElement.lang = lang;
+    applyStaticTranslations();
+    if (document.getElementById("heroHint").textContent) {
+      document.getElementById("heroHint").textContent = t("hero_hint") + " — " + HERO_WATCH.name;
+    }
+    if (typeof buildCollectionGrid === "function" && document.getElementById("collectionGrid").children.length) {
+      buildCollectionGrid();
+    }
+    renderSelectionSummary();
+    renderCompareSection();
+    var current = WATCHES.filter(function(w){ return w.id === selectedId; })[0] || WATCHES[0];
+    if (document.getElementById("detailName").textContent) renderDetail(current);
+  }
+
   document.addEventListener("DOMContentLoaded", function(){
+    applyStaticTranslations();
+    var langBtn = document.getElementById("langToggle");
+    if (langBtn) {
+      langBtn.addEventListener("click", function(){
+        setLanguage(currentLang === "fr" ? "en" : "fr");
+      });
+    }
     document.addEventListener("pointerdown", unlockAudioOnce, { once: true });
     document.addEventListener("touchstart", unlockAudioOnce, { once: true });
 
@@ -2251,14 +2578,14 @@
     }
 
     if (!hasWebGL()) {
-      showFatal("Votre navigateur ne supporte pas l'affichage 3D (WebGL). Essayez avec une version à jour de Safari ou Chrome.");
+      showFatal(t("fatal_webgl"));
       return;
     }
 
     loadThree()
       .then(function(){
         if (typeof THREE === "undefined") {
-          showFatal("Le moteur 3D n'a pas pu être initialisé. Rechargez la page.");
+          showFatal(t("fatal_three"));
           return;
         }
         var ready = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
@@ -2296,12 +2623,12 @@
               }
             });
           } catch (e) {
-            showFatal("Une erreur est survenue au chargement. Rechargez la page.");
+            showFatal(t("fatal_error"));
           }
         });
       })
       .catch(function(){
-        showFatal("Impossible de charger le moteur 3D. Vérifiez votre connexion internet et réessayez.");
+        showFatal(t("fatal_network"));
       });
   });
 })();
