@@ -269,6 +269,11 @@
     border-top:1px solid var(--line); padding:80px 28px;
     display:grid; grid-template-columns:1fr 1fr; gap:40px; max-width:1200px; margin:0 auto;
     align-items:center;
+    transition:opacity 0.22s ease, transform 0.22s ease;
+  }
+  .detail--transitioning{ opacity:0; transform:scale(0.985); }
+  @media (prefers-reduced-motion: reduce){
+    .detail{ transition:none; }
   }
   @media (max-width:800px){ .detail{ grid-template-columns:1fr; } }
   .detail__canvas{ height:420px; width:100%; background:radial-gradient(circle at center, var(--bg-panel-2), transparent 70%); }
@@ -348,6 +353,17 @@
   .detail__hint{ margin-top:16px; font-size:12px; color:var(--text-muted); }
 
   /* Footer */
+  .about{ padding:60px 28px; max-width:700px; margin:0 auto; border-top:1px solid var(--line); }
+  .about__header h2{ font-size:24px; margin:0 0 20px; }
+  .about__text{ color:var(--text-muted); font-size:15px; line-height:1.6; margin:0 0 28px; max-width:560px; }
+  .about__contact{ display:flex; flex-wrap:wrap; align-items:center; gap:12px; }
+  .about__contact-label{ font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--text-muted); }
+  .about__email{
+    color:var(--violet); font-family:'JetBrains Mono', monospace; font-size:14px; text-decoration:none;
+    border-bottom:1px solid var(--violet); padding-bottom:2px; transition:color 0.2s ease, border-color 0.2s ease;
+  }
+  .about__email:hover{ color:var(--text); border-color:var(--text); }
+
   .footer{
     border-top:1px solid var(--line); padding:32px 28px; display:flex;
     justify-content:space-between; flex-wrap:wrap; gap:8px;
@@ -784,6 +800,17 @@
     </div>
   </section>
 
+  <section class="about" id="about">
+    <div class="about__header">
+      <h2 data-i18n="about_title">À propos</h2>
+    </div>
+    <p class="about__text" data-i18n="about_text">PROCESS est un projet indépendant qui explore la 3D immersive appliquée à l'horlogerie — chaque montre est modélisée, texturée et animée directement dans le navigateur, sans photo ni rendu pré-calculé.</p>
+    <div class="about__contact">
+      <span class="about__contact-label" data-i18n="about_contact_label">Une question, une idée de collaboration ?</span>
+      <a href="mailto:toddbal0909@gmail.com" class="about__email">toddbal0909@gmail.com</a>
+    </div>
+  </section>
+
   <footer class="footer">
     <span><span class="brand-font" style="font-weight:700;">PROCESS</span> — <span data-i18n="footer_tagline">étude de concept horloger</span></span>
     <span data-i18n="footer_note">Pièces non commercialisées</span>
@@ -875,6 +902,10 @@
       pdf_label: "Fiche PDF",
       pdf_aria: "T\u00e9l\u00e9charger la fiche technique en PDF",
       print_footer: "PROCESS \u2014 fiche technique",
+      nav_about: "\u00c0 propos",
+      about_title: "\u00c0 propos",
+      about_text: "PROCESS est un projet ind\u00e9pendant qui explore la 3D immersive appliqu\u00e9e \u00e0 l'horlogerie \u2014 chaque montre est mod\u00e9lis\u00e9e, textur\u00e9e et anim\u00e9e directement dans le navigateur, sans photo ni rendu pr\u00e9calcul\u00e9.",
+      about_contact_label: "Une question, une id\u00e9e de collaboration\u00a0?",
       fatal_title: "PROCESS ne peut pas s'afficher",
       fatal_retry: "R\u00e9essayer",
       fatal_webgl: "Votre navigateur ne supporte pas l'affichage 3D (WebGL). Essayez avec une version \u00e0 jour de Safari ou Chrome.",
@@ -963,6 +994,10 @@
       pdf_label: "PDF sheet",
       pdf_aria: "Download the technical sheet as PDF",
       print_footer: "PROCESS \u2014 technical sheet",
+      nav_about: "About",
+      about_title: "About",
+      about_text: "PROCESS is an independent project exploring immersive 3D applied to horology \u2014 every watch is modeled, textured and animated directly in the browser, with no photos or pre-rendered images.",
+      about_contact_label: "A question, an idea for collaboration?",
       fatal_title: "PROCESS can't be displayed",
       fatal_retry: "Try again",
       fatal_webgl: "Your browser doesn't support 3D rendering (WebGL). Try an up-to-date version of Safari or Chrome.",
@@ -2048,7 +2083,35 @@
     }
   }
 
+  var detailInitialized = false;
+  var detailTransitionTimer = null;
+
   function renderDetail(watch){
+    var section = document.getElementById("detailSection");
+
+    if (!detailInitialized) {
+      detailInitialized = true;
+      renderDetailImmediate(watch);
+      return;
+    }
+
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      renderDetailImmediate(watch);
+      return;
+    }
+
+    if (detailTransitionTimer) clearTimeout(detailTransitionTimer);
+    section.classList.add("detail--transitioning");
+    detailTransitionTimer = setTimeout(function(){
+      renderDetailImmediate(watch);
+      requestAnimationFrame(function(){
+        section.classList.remove("detail--transitioning");
+      });
+    }, 220);
+  }
+
+  function renderDetailImmediate(watch){
     document.getElementById("detailName").textContent = watch.name;
     document.getElementById("detailTagline").textContent = tw(watch).tagline;
     document.getElementById("detailSpecs").innerHTML =
