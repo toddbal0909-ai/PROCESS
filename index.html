@@ -18,7 +18,7 @@
 <meta name="twitter:description" content="Six montres, une seule méthode : rendre le mécanisme visible." />
 <meta name="twitter:image" content="og-image.png" />
 
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" id="faviconLink" />
 <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png" />
 <link rel="apple-touch-icon" href="favicon-192.png" />
 
@@ -276,7 +276,36 @@
     .detail{ transition:none; }
   }
   @media (max-width:800px){ .detail{ grid-template-columns:1fr; } }
+  .detail__canvas-wrap{ position:relative; }
   .detail__canvas{ height:420px; width:100%; background:radial-gradient(circle at center, var(--bg-panel-2), transparent 70%); }
+  .detail__fullscreen{
+    position:absolute; top:12px; right:12px; z-index:5;
+    width:36px; height:36px; border-radius:50%; border:1px solid var(--line);
+    background:rgba(9,12,20,0.7); color:var(--text-muted); font-size:16px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color 0.2s ease, color 0.2s ease;
+  }
+  .detail__fullscreen:hover{ border-color:var(--accent); color:var(--text); }
+
+  .immersive-overlay{
+    position:fixed; inset:0; z-index:90; display:none;
+    background:var(--bg-void); opacity:0; transition:opacity 0.3s ease;
+  }
+  .immersive-overlay--visible{ opacity:1; }
+  .immersive-canvas{ position:absolute; inset:0; }
+  .immersive-exit{
+    position:absolute; top:max(16px, env(safe-area-inset-top)); right:16px; z-index:5;
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--line);
+    background:rgba(9,12,20,0.7); color:var(--text); font-size:20px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:border-color 0.2s ease;
+  }
+  .immersive-exit:hover{ border-color:var(--accent); }
+  .immersive-label{
+    position:absolute; left:0; right:0; bottom:max(24px, env(safe-area-inset-bottom));
+    text-align:center; font-family:'Chakra Petch', sans-serif; font-weight:600; font-size:16px;
+    color:var(--text); pointer-events:none;
+  }
   .detail__eyebrow{ font-size:12px; color:var(--accent); font-family:'JetBrains Mono', monospace; margin-bottom:8px; }
   .detail__name{ font-size:32px; margin:0 0 6px; font-family:'Chakra Petch', sans-serif; }
   .detail__tagline{ color:var(--text-muted); margin:0 0 20px; }
@@ -700,6 +729,12 @@
     <div class="boot-overlay__lines" id="bootLines"></div>
   </div>
 
+  <div class="immersive-overlay" id="immersiveOverlay">
+    <div class="immersive-canvas" id="immersiveCanvas"></div>
+    <button class="immersive-exit" id="immersiveExit" aria-label="Quitter le mode plein écran">×</button>
+    <div class="immersive-label" id="immersiveLabel"></div>
+  </div>
+
   <div class="fatal-overlay" id="fatalOverlay">
     <div class="fatal-box">
       <div class="fatal-title" data-i18n="fatal_title">PROCESS ne peut pas s'afficher</div>
@@ -760,7 +795,10 @@
 
   <section id="detail">
     <div class="detail" id="detailSection">
-      <div class="detail__canvas" id="detailCanvas"></div>
+      <div class="detail__canvas-wrap">
+        <div class="detail__canvas" id="detailCanvas"></div>
+        <button class="detail__fullscreen" id="detailFullscreen" aria-label="Mode plein écran">⛶</button>
+      </div>
       <div class="detail__panel">
         <div class="detail__eyebrow" data-i18n="detail_eyebrow">Vue détaillée</div>
         <h3 class="detail__name" id="detailName"></h3>
@@ -909,6 +947,8 @@
       about_title: "\u00c0 propos",
       about_text: "PROCESS est un projet ind\u00e9pendant qui explore la 3D immersive appliqu\u00e9e \u00e0 l'horlogerie \u2014 chaque montre est mod\u00e9lis\u00e9e, textur\u00e9e et anim\u00e9e directement dans le navigateur, sans photo ni rendu pr\u00e9calcul\u00e9.",
       about_contact_label: "Une question, une id\u00e9e de collaboration\u00a0?",
+      fullscreen_open_label: "Mode plein \u00e9cran",
+      fullscreen_exit_label: "Quitter le mode plein \u00e9cran",
       fatal_title: "PROCESS ne peut pas s'afficher",
       fatal_retry: "R\u00e9essayer",
       fatal_webgl: "Votre navigateur ne supporte pas l'affichage 3D (WebGL). Essayez avec une version \u00e0 jour de Safari ou Chrome.",
@@ -1001,6 +1041,8 @@
       about_title: "About",
       about_text: "PROCESS is an independent project exploring immersive 3D applied to horology \u2014 every watch is modeled, textured and animated directly in the browser, with no photos or pre-rendered images.",
       about_contact_label: "A question, an idea for collaboration?",
+      fullscreen_open_label: "Fullscreen mode",
+      fullscreen_exit_label: "Exit fullscreen mode",
       fatal_title: "PROCESS can't be displayed",
       fatal_retry: "Try again",
       fatal_webgl: "Your browser doesn't support 3D rendering (WebGL). Try an up-to-date version of Safari or Chrome.",
@@ -1093,6 +1135,8 @@
     if (detailNextBtn) detailNextBtn.setAttribute("aria-label", t("step_next_label"));
     var shareBtnEl = document.getElementById("detailShare");
     if (shareBtnEl) shareBtnEl.setAttribute("aria-label", t("share_aria"));
+    var immersiveExitBtn = document.getElementById("immersiveExit");
+    if (immersiveExitBtn) immersiveExitBtn.setAttribute("aria-label", t("fullscreen_exit_label"));
     var langBtn = document.getElementById("langToggle");
     if (langBtn) {
       langBtn.setAttribute("aria-label", t("lang_toggle_label"));
@@ -2114,7 +2158,84 @@
     }, 220);
   }
 
+  function updateFavicon(hex){
+    try {
+      var size = 64;
+      var canvas = document.createElement("canvas");
+      canvas.width = size; canvas.height = size;
+      var ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#090c14";
+      ctx.fillRect(0, 0, size, size);
+
+      var cx = size / 2, cy = size / 2;
+      var color = hexToCss(hex);
+      var ringR = size * 0.33;
+
+      ctx.strokeStyle = color;
+      ctx.lineWidth = size * 0.09;
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.strokeStyle = "rgba(233,236,244,0.75)";
+      ctx.lineWidth = size * 0.02;
+      for (var i = 0; i < 12; i++) {
+        var a = (i / 12) * Math.PI * 2;
+        var r1 = ringR - size * 0.1, r2 = ringR - size * 0.04;
+        ctx.beginPath();
+        ctx.moveTo(cx + r1 * Math.sin(a), cy - r1 * Math.cos(a));
+        ctx.lineTo(cx + r2 * Math.sin(a), cy - r2 * Math.cos(a));
+        ctx.stroke();
+      }
+
+      var link = document.getElementById("faviconLink");
+      if (link) link.href = canvas.toDataURL("image/png");
+    } catch (e) {}
+  }
+
+  var immersiveHandle = null;
+
+  function openImmersive(watch){
+    var overlay = document.getElementById("immersiveOverlay");
+    var canvasEl = document.getElementById("immersiveCanvas");
+    document.getElementById("immersiveLabel").textContent = watch.name;
+    overlay.style.display = "block";
+    document.documentElement.style.overflow = "hidden";
+
+    try {
+      if (overlay.requestFullscreen) overlay.requestFullscreen().catch(function(){});
+    } catch (e) {}
+
+    requestAnimationFrame(function(){
+      overlay.classList.add("immersive-overlay--visible");
+    });
+
+    immersiveHandle = initInteractiveScene(canvasEl, watch, {
+      interactive: true, showGrid: true, showParticles: true, cameraZ: 3.4, pixelRatioCap: 1.75
+    });
+  }
+
+  function closeImmersive(){
+    var overlay = document.getElementById("immersiveOverlay");
+    overlay.classList.remove("immersive-overlay--visible");
+    document.documentElement.style.overflow = "";
+
+    try {
+      if (document.fullscreenElement) document.exitFullscreen().catch(function(){});
+    } catch (e) {}
+
+    setTimeout(function(){
+      overlay.style.display = "none";
+      if (immersiveHandle) { immersiveHandle.dispose(); immersiveHandle = null; }
+    }, 320);
+  }
+
   function renderDetailImmediate(watch){
+    updateFavicon(watch.accent);
+
+    var fullscreenBtn = document.getElementById("detailFullscreen");
+    fullscreenBtn.setAttribute("aria-label", t("fullscreen_open_label"));
+    fullscreenBtn.onclick = function(){ openImmersive(watch); };
     document.getElementById("detailName").textContent = watch.name;
     document.getElementById("detailTagline").textContent = tw(watch).tagline;
     document.getElementById("detailSpecs").innerHTML =
@@ -2417,6 +2538,15 @@
     selectWatch(WATCHES[nextIdx].id, { updateHash: true });
   }
 
+  function initImmersive(){
+    document.getElementById("immersiveExit").addEventListener("click", closeImmersive);
+    document.addEventListener("keydown", function(e){
+      if (e.key === "Escape" && document.getElementById("immersiveOverlay").style.display !== "none") {
+        closeImmersive();
+      }
+    });
+  }
+
   function initWatchNav(){
     document.getElementById("prevWatch").addEventListener("click", function(){ navigateWatch(-1); });
     document.getElementById("nextWatch").addEventListener("click", function(){ navigateWatch(1); });
@@ -2668,6 +2798,7 @@
 
             initNav();
             initWatchNav();
+            initImmersive();
             runBootSequence();
 
             if (hasValidHash) {
