@@ -1126,9 +1126,9 @@
     var notFoundClose = document.getElementById("notFoundClose");
     if (notFoundClose) notFoundClose.setAttribute("aria-label", t("notfound_close"));
     var prevWatchBtn = document.getElementById("prevWatch");
-    if (prevWatchBtn) prevWatchBtn.setAttribute("aria-label", t("watchnav_prev_label"));
+    if (prevWatchBtn) { prevWatchBtn.setAttribute("aria-label", t("watchnav_prev_label")); prevWatchBtn.title = t("watchnav_prev_label") + " (\u2190)"; }
     var nextWatchBtn = document.getElementById("nextWatch");
-    if (nextWatchBtn) nextWatchBtn.setAttribute("aria-label", t("watchnav_next_label"));
+    if (nextWatchBtn) { nextWatchBtn.setAttribute("aria-label", t("watchnav_next_label")); nextWatchBtn.title = t("watchnav_next_label") + " (\u2192)"; }
     var detailPrevBtn = document.getElementById("detailPrev");
     if (detailPrevBtn) detailPrevBtn.setAttribute("aria-label", t("step_prev_label"));
     var detailNextBtn = document.getElementById("detailNext");
@@ -2550,6 +2550,13 @@
   function initWatchNav(){
     document.getElementById("prevWatch").addEventListener("click", function(){ navigateWatch(-1); });
     document.getElementById("nextWatch").addEventListener("click", function(){ navigateWatch(1); });
+
+    document.addEventListener("keydown", function(e){
+      if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+      if (document.getElementById("immersiveOverlay").style.display !== "none") return;
+      if (e.key === "ArrowLeft") navigateWatch(-1);
+      else if (e.key === "ArrowRight") navigateWatch(1);
+    });
 
     var section = document.getElementById("detailSection");
     var startX = 0, startY = 0, tracking = false;
